@@ -3,13 +3,24 @@ name = "aiostreams"
 main = "src/index.ts"
 compatibility_date = "2024-12-24"
 compatibility_flags = ["nodejs_compat"]
-assets = { directory = "../frontend/out", binding = "ASSETS", experimental_serve_directly = false}
+assets = { directory = "../frontend/out", binding = "ASSETS", experimental_serve_directly = false }
+
+# Exclude node:sqlite from bundling
+[build]
+command = "wrangler deploy"
+[build.upload]
+exclude = ["node:sqlite"]
 
 # Workers Logs
-# Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
-# Configuration: https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs
 [observability]
 enabled = true
+
+# Bind a D1 database instead of using node:sqlite
+[[d1_databases]]
+binding = "MY_DB"
+database_name = "aiostreams-db"
+database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
 
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Worker, running it closer to your back-end infrastructure
